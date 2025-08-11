@@ -28,6 +28,9 @@ const Index = () => {
               <Button asChild variant="secondary" size="xl">
                 <Link to="/planner">Plan My Week</Link>
               </Button>
+              <Button asChild variant="outline" size="xl">
+                <Link to="/auth">Log in</Link>
+              </Button>
             </div>
           </div>
           <div className="rounded-xl border shadow-elegant overflow-hidden">

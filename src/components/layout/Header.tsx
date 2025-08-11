@@ -1,8 +1,8 @@
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { ChefHat, CalendarDays, ShoppingCart, PlusCircle } from "lucide-react";
-
+import { ChefHat, CalendarDays, ShoppingCart, PlusCircle, LogIn, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 const navItems = [
   { to: "/", label: "Home" },
   { to: "/recipes", label: "Recipes" },
@@ -12,6 +12,7 @@ const navItems = [
 
 export const Header = () => {
   const location = useLocation();
+  const { user, signOut } = useAuth();
   return (
     <header className="sticky top-0 z-40 bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/70 border-b">
       <div className="container mx-auto flex h-16 items-center justify-between">
@@ -54,6 +55,19 @@ export const Header = () => {
               Add Recipe
             </Link>
           </Button>
+          {!user ? (
+            <Button asChild variant="outline" size="sm">
+              <Link to="/auth" className="flex items-center gap-2">
+                <LogIn className="h-4 w-4" />
+                Log in
+              </Link>
+            </Button>
+          ) : (
+            <Button variant="ghost" size="sm" onClick={() => signOut()} className="flex items-center gap-2">
+              <LogOut className="h-4 w-4" />
+              Log out
+            </Button>
+          )}
         </div>
       </div>
     </header>
