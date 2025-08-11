@@ -42,7 +42,7 @@ export const Header = () => {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 hidden sm:block">
           <Button asChild variant="secondary" size="sm">
             <Link to="/planner" className="flex items-center gap-2">
               <CalendarDays className="h-4 w-4" />
@@ -55,6 +55,8 @@ export const Header = () => {
               Add Recipe
             </Link>
           </Button>
+        
+        </div>
           {!user ? (
             <Button asChild variant="outline" size="sm">
               <Link to="/auth" className="flex items-center gap-2">
@@ -68,7 +70,6 @@ export const Header = () => {
               Log out
             </Button>
           )}
-        </div>
       </div>
     </header>
   );
