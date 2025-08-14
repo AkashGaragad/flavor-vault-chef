@@ -15,6 +15,7 @@ import RecipeDetail from "./pages/RecipeDetail";
 import Auth from "./pages/Auth";
 import { AuthProvider } from "./hooks/useAuth";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Footer from "./components/layout/Footer";
 
 const queryClient = new QueryClient();
 
@@ -59,6 +60,9 @@ const App = () => (
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
+            
+<Footer />
+       
           </BrowserRouter>
         </AuthProvider>
       </TooltipProvider>

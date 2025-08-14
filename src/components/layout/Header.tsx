@@ -42,8 +42,8 @@ export const Header = () => {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2 hidden sm:block">
-          <Button asChild variant="secondary" size="sm">
+        <div className="flex items-center gap-2  hidden sm:block">
+          <Button asChild variant="secondary" size="sm" className="mr-4">
             <Link to="/planner" className="flex items-center gap-2">
               <CalendarDays className="h-4 w-4" />
               Plan Week
