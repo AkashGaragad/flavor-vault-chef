@@ -39,7 +39,7 @@ const Index = () => {
             </div>
           </div>
           <div className="rounded-xl border shadow-elegant overflow-hidden">
-            <img src={hero} alt="Appetizing Mediterranean dish showcasing fresh ingredients" className="w-full h-full object-cover" />
+            <img src={hero}  width="600" height="400" loading="lazy"  alt="Appetizing Mediterranean dish showcasing fresh ingredients" className="w-full h-full object-cover" />
           </div>
         </div>
       </section>

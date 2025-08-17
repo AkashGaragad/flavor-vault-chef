@@ -3,7 +3,12 @@ import { Helmet } from "react-helmet-async";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { computeNutrition, getRecipeById, scaleIngredients } from "@/store/recipeStore";
+import { ShareButton } from "@/components/ShareButton";
+import {
+  computeNutrition,
+  getRecipeById,
+  scaleIngredients,
+} from "@/store/recipeStore";
 
 const RecipeDetail = () => {
   const { id } = useParams();
@@ -11,9 +16,13 @@ const RecipeDetail = () => {
   const recipe = id ? getRecipeById(id) : undefined;
   const [servings, setServings] = useState(recipe?.servings ?? 2);
 
-  const nutrition = useMemo(() => (
-    recipe ? computeNutrition(recipe.ingredients, recipe.servings, servings) : { calories: 0, protein: 0, carbs: 0, fat: 0 }
-  ), [recipe, servings]);
+  const nutrition = useMemo(
+    () =>
+      recipe
+        ? computeNutrition(recipe.ingredients, recipe.servings, servings)
+        : { calories: 0, protein: 0, carbs: 0, fat: 0 },
+    [recipe, servings]
+  );
 
   if (!recipe) {
     return (
@@ -26,13 +35,20 @@ const RecipeDetail = () => {
     );
   }
 
-  const scaled = scaleIngredients(recipe.ingredients, recipe.servings, servings);
+  const scaled = scaleIngredients(
+    recipe.ingredients,
+    recipe.servings,
+    servings
+  );
 
   return (
     <main className="container mx-auto py-8">
       <Helmet>
         <title>{recipe.title} | Personal Recipe Collection</title>
-        <meta name="description" content={`View ${recipe.title} with ingredients, steps, and nutrition.`} />
+        <meta
+          name="description"
+          content={`View ${recipe.title} with ingredients, steps, and nutrition.`}
+        />
         <link rel="canonical" href={`/recipe/${recipe.id}`} />
         <script type="application/ld+json">
           {JSON.stringify({
@@ -41,8 +57,13 @@ const RecipeDetail = () => {
             name: recipe.title,
             image: recipe.image ? [recipe.image] : undefined,
             recipeYield: `${servings} servings`,
-            recipeIngredient: scaled.map((i) => `${i.quantity} ${i.unit} ${i.name}`),
-            recipeInstructions: recipe.steps.map((s) => ({ "@type": "HowToStep", text: s })),
+            recipeIngredient: scaled.map(
+              (i) => `${i.quantity} ${i.unit} ${i.name}`
+            ),
+            recipeInstructions: recipe.steps.map((s) => ({
+              "@type": "HowToStep",
+              text: s,
+            })),
           })}
         </script>
       </Helmet>
@@ -50,7 +71,13 @@ const RecipeDetail = () => {
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <div className="aspect-video w-full overflow-hidden rounded-md bg-muted">
-            {recipe.image && <img src={recipe.image} alt={`${recipe.title} photo`} className="h-full w-full object-cover" />}
+            {recipe.image && (
+              <img  width="600" height="400" loading="lazy"
+                src={recipe.image}
+                alt={`${recipe.title} photo`}
+                className="h-full w-full object-cover"
+              />
+            )}
           </div>
 
           <h1 className="text-3xl font-bold mt-4">{recipe.title}</h1>
@@ -72,7 +99,15 @@ const RecipeDetail = () => {
               <div className="space-y-2">
                 <div className="text-sm text-muted-foreground">Servings</div>
                 <div className="flex items-center gap-2">
-                  <input type="number" min={1} className="w-24 h-10 rounded-md border border-input bg-background px-3 text-sm" value={servings} onChange={(e) => setServings(parseInt(e.target.value) || recipe.servings)} />
+                  <input
+                    type="number"
+                    min={1}
+                    className="w-24 h-10 rounded-md border border-input bg-background px-3 text-sm"
+                    value={servings}
+                    onChange={(e) =>
+                      setServings(parseInt(e.target.value) || recipe.servings)
+                    }
+                  />
                 </div>
               </div>
 
@@ -80,7 +115,12 @@ const RecipeDetail = () => {
                 <h3 className="font-semibold">Ingredients</h3>
                 <ul className="space-y-1 text-sm">
                   {scaled.map((i) => (
-                    <li key={i.id} className="flex justify-between"><span>{i.name}</span><span className="text-muted-foreground">{i.quantity} {i.unit}</span></li>
+                    <li key={i.id} className="flex justify-between">
+                      <span>{i.name}</span>
+                      <span className="text-muted-foreground">
+                        {i.quantity} {i.unit}
+                      </span>
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -94,8 +134,12 @@ const RecipeDetail = () => {
                   <li>Fat: {nutrition.fat.toFixed(1)} g</li>
                 </ul>
               </div>
-
-              <Button variant="hero" onClick={() => nav("/planner")}>Plan this recipe</Button>
+              <div className="flex gap-3">
+                <Button variant="hero" onClick={() => nav("/planner")}>
+                  Plan this recipe
+                </Button>
+ <ShareButton />
+              </div>
             </CardContent>
           </Card>
         </aside>
