@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
-import { addRecipe, Ingredient } from "@/store/recipeStore";
+import { supabase } from "@/integrations/supabase/client";  // ✅ use supabase client
 
 function compressImage(file: File, maxWidth = 1280): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -47,7 +47,7 @@ const RecipeForm = () => {
   const [stepsText, setStepsText] = useState<string>("");
   const [image, setImage] = useState<string | undefined>(undefined);
 
-  const [ingredients, setIngredients] = useState<Ingredient[]>([
+  const [ingredients, setIngredients] = useState<any[]>([
     { id: crypto.randomUUID?.() || String(Math.random()), name: "", quantity: 0, unit: "g" },
   ]);
 
@@ -59,9 +59,13 @@ const RecipeForm = () => {
     setImage(dataUrl);
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (!title.trim()) {
-      toast({ title: "Missing title", description: "Please provide a recipe title.", variant: "destructive" });
+      toast({
+        title: "Missing title",
+        description: "Please provide a recipe title.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -70,29 +74,49 @@ const RecipeForm = () => {
       .map((s) => s.trim())
       .filter(Boolean);
 
-    const newRecipe = addRecipe({
-      title: title.trim(),
-      timeMinutes,
-      servings,
-      difficulty,
-      tags: tags
-        .split(",")
-        .map((t) => t.trim())
-        .filter(Boolean),
-      ingredients: ingredients.filter((i) => i.name.trim()),
-      steps,
-      image,
-    });
+    // ✅ Save to Supabase
+    const { data, error } = await supabase
+      .from("recipes")
+      .insert([
+        {
+          title: title.trim(),
+          description: "", // optional field
+          time_minutes: timeMinutes,
+          servings,
+          difficulty,
+          tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
+          ingredients: ingredients.filter((i) => i.name.trim()),
+          steps,
+          image,
+        },
+      ])
+      .select()
+      .single();
 
-    toast({ title: "Recipe saved", description: `${newRecipe.title} added to your collection.` });
-    nav(`/recipe/${newRecipe.id}`);
+    if (error) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "Recipe saved",
+      description: `${data.title} added successfully.`,
+    });
+    nav(`/recipe/${data.id}`);
   };
 
   return (
     <main className="container mx-auto py-8">
       <Helmet>
         <title>Add Recipe | Personal Recipe Collection</title>
-        <meta name="description" content="Create a new recipe with photo, ingredients, and step-by-step instructions." />
+        <meta
+          name="description"
+          content="Create a new recipe with photo, ingredients, and step-by-step instructions."
+        />
         <link rel="canonical" href="/recipes/new" />
       </Helmet>
 
@@ -104,45 +128,90 @@ const RecipeForm = () => {
             <div className="md:col-span-2 space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="title">Title</Label>
-                <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g., Grilled Salmon" />
+                <Input
+                  id="title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="e.g., Grilled Salmon"
+                />
               </div>
 
               <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label>Time (min)</Label>
-                  <Input type="number" value={timeMinutes} onChange={(e) => setTimeMinutes(parseInt(e.target.value) || 0)} />
+                  <Input
+                    type="number"
+                    value={timeMinutes}
+                    onChange={(e) =>
+                      setTimeMinutes(parseInt(e.target.value) || 0)
+                    }
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label>Servings</Label>
-                  <Input type="number" value={servings} onChange={(e) => setServings(parseInt(e.target.value) || 1)} />
+                  <Input
+                    type="number"
+                    value={servings}
+                    onChange={(e) =>
+                      setServings(parseInt(e.target.value) || 1)
+                    }
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label>Difficulty</Label>
-                    <select className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm" value={difficulty} onChange={(e) => setDifficulty(e.target.value as any)}>
-                      {difficulties.map((d) => (
-                        <option key={d} value={d}>{d}</option>
-                      ))}
-                    </select>
+                  <select
+                    className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
+                    value={difficulty}
+                    onChange={(e) =>
+                      setDifficulty(e.target.value as any)
+                    }
+                  >
+                    {difficulties.map((d) => (
+                      <option key={d} value={d}>
+                        {d}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
               <div className="space-y-2">
                 <Label>Tags (comma separated)</Label>
-                <Input value={tags} onChange={(e) => setTags(e.target.value)} placeholder="salmon, zucchini, dinner" />
+                <Input
+                  value={tags}
+                  onChange={(e) => setTags(e.target.value)}
+                  placeholder="salmon, zucchini, dinner"
+                />
               </div>
 
               <div className="space-y-2">
                 <Label>Steps (one per line)</Label>
-                <Textarea value={stepsText} onChange={(e) => setStepsText(e.target.value)} rows={8} placeholder="Write each cooking step on a new line..." />
+                <Textarea
+                  value={stepsText}
+                  onChange={(e) => setStepsText(e.target.value)}
+                  rows={8}
+                  placeholder="Write each cooking step on a new line..."
+                />
               </div>
             </div>
 
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label>Photo</Label>
-                <input ref={fileRef} type="file" accept="image/*" onChange={(e) => onFile(e.target.files?.[0])} />
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => onFile(e.target.files?.[0])}
+                />
                 <div className="aspect-video w-full overflow-hidden rounded-md bg-muted">
-                  {image && <img src={image} alt="Recipe preview" className="h-full w-full object-cover" />}
+                  {image && (
+                    <img
+                      src={image}
+                      alt="Recipe preview"
+                      className="h-full w-full object-cover"
+                    />
+                  )}
                 </div>
               </div>
 
@@ -151,14 +220,87 @@ const RecipeForm = () => {
                 <div className="space-y-3">
                   {ingredients.map((i, idx) => (
                     <div key={i.id} className="grid grid-cols-12 gap-2">
-                      <Input className="col-span-5" placeholder="Name" value={i.name} onChange={(e) => setIngredients((prev) => prev.map((x, xIdx) => xIdx === idx ? { ...x, name: e.target.value } : x))} />
-                      <Input className="col-span-3" type="number" step="0.01" placeholder="Qty" value={i.quantity} onChange={(e) => setIngredients((prev) => prev.map((x, xIdx) => xIdx === idx ? { ...x, quantity: parseFloat(e.target.value) || 0 } : x))} />
-                      <Input className="col-span-4" placeholder="Unit (g, ml, piece)" value={i.unit} onChange={(e) => setIngredients((prev) => prev.map((x, xIdx) => xIdx === idx ? { ...x, unit: e.target.value } : x))} />
+                      <Input
+                        className="col-span-5"
+                        placeholder="Name"
+                        value={i.name}
+                        onChange={(e) =>
+                          setIngredients((prev) =>
+                            prev.map((x, xIdx) =>
+                              xIdx === idx
+                                ? { ...x, name: e.target.value }
+                                : x
+                            )
+                          )
+                        }
+                      />
+                      <Input
+                        className="col-span-3"
+                        type="number"
+                        step="0.01"
+                        placeholder="Qty"
+                        value={i.quantity}
+                        onChange={(e) =>
+                          setIngredients((prev) =>
+                            prev.map((x, xIdx) =>
+                              xIdx === idx
+                                ? {
+                                    ...x,
+                                    quantity:
+                                      parseFloat(e.target.value) || 0,
+                                  }
+                                : x
+                            )
+                          )
+                        }
+                      />
+                      <Input
+                        className="col-span-4"
+                        placeholder="Unit (g, ml, piece)"
+                        value={i.unit}
+                        onChange={(e) =>
+                          setIngredients((prev) =>
+                            prev.map((x, xIdx) =>
+                              xIdx === idx
+                                ? { ...x, unit: e.target.value }
+                                : x
+                            )
+                          )
+                        }
+                      />
                     </div>
                   ))}
                   <div className="flex gap-2">
-                    <Button type="button" variant="secondary" onClick={() => setIngredients((p) => [...p, { id: crypto.randomUUID?.() || String(Math.random()), name: "", quantity: 0, unit: "g" }])}>Add Ingredient</Button>
-                    <Button type="button" variant="outline" onClick={() => setIngredients((p) => p.length > 1 ? p.slice(0, -1) : p)}>Remove Last</Button>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      onClick={() =>
+                        setIngredients((p) => [
+                          ...p,
+                          {
+                            id:
+                              crypto.randomUUID?.() ||
+                              String(Math.random()),
+                            name: "",
+                            quantity: 0,
+                            unit: "g",
+                          },
+                        ])
+                      }
+                    >
+                      Add Ingredient
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() =>
+                        setIngredients((p) =>
+                          p.length > 1 ? p.slice(0, -1) : p
+                        )
+                      }
+                    >
+                      Remove Last
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -166,7 +308,9 @@ const RecipeForm = () => {
           </div>
 
           <div className="flex justify-end">
-            <Button variant="hero" onClick={onSubmit}>Save Recipe</Button>
+            <Button variant="hero" onClick={onSubmit}>
+              Save Recipe
+            </Button>
           </div>
         </CardContent>
       </Card>

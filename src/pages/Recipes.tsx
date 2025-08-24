@@ -1,16 +1,52 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import RecipeCard from "@/components/recipes/RecipeCard";
-import { getRecipes, Recipe } from "@/store/recipeStore";
+import { supabase } from "@/integrations/supabase/client";
 
 const Recipes = () => {
   const navigate = useNavigate();
   const [q, setQ] = useState("");
-  const [recipes, setRecipes] = useState<Recipe[]>(getRecipes());
+  const [recipes, setRecipes] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("recipes")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Error fetching recipes:", error);
+      } else {
+        setRecipes(data || []);
+      }
+      setLoading(false);
+    };
+
+    fetchRecipes();
+
+    // ✅ Optional: live updates via Supabase Realtime
+    const channel = supabase
+      .channel("recipes-changes")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "recipes" },
+        (payload) => {
+          setRecipes((prev) => [payload.new, ...prev]);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
@@ -20,7 +56,7 @@ const Recipes = () => {
         r.title,
         r.description ?? "",
         ...(r.tags ?? []),
-        ...(r.ingredients?.map((i) => i.name) ?? []),
+        ...(r.ingredients?.map((i: any) => i.name) ?? []),
       ]
         .join(" ")
         .toLowerCase()
@@ -32,7 +68,10 @@ const Recipes = () => {
     <main className="container mx-auto py-8">
       <Helmet>
         <title>Recipes | Personal Recipe Collection</title>
-        <meta name="description" content="Browse, search, and manage your personal recipes by ingredients, tags, and cuisine." />
+        <meta
+          name="description"
+          content="Browse, search, and manage your personal recipes by ingredients, tags, and cuisine."
+        />
         <link rel="canonical" href="/recipes" />
       </Helmet>
       <div className="flex items-center justify-between gap-4 mb-6">
@@ -53,14 +92,24 @@ const Recipes = () => {
         </CardContent>
       </Card>
 
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filtered.map((r) => (
-          <RecipeCard key={r.id} recipe={r} onClick={() => navigate(`/recipe/${r.id}`)} />
-        ))}
-      </section>
-
-      {filtered.length === 0 && (
-        <div className="text-center text-muted-foreground mt-12">No recipes found. Try a different search.</div>
+      {loading ? (
+        <div className="text-center text-muted-foreground mt-12">
+          Loading recipes...
+        </div>
+      ) : filtered.length > 0 ? (
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filtered.map((r) => (
+            <RecipeCard
+              key={r.id}
+              recipe={r}
+              onClick={() => navigate(`/recipe/${r.id}`)}
+            />
+          ))}
+        </section>
+      ) : (
+        <div className="text-center text-muted-foreground mt-12">
+          No recipes found. Try a different search.
+        </div>
       )}
     </main>
   );

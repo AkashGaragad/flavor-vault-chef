@@ -1,20 +1,41 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ShareButton } from "@/components/ShareButton";
-import {
-  computeNutrition,
-  getRecipeById,
-  scaleIngredients,
-} from "@/store/recipeStore";
+import { computeNutrition, scaleIngredients } from "@/store/recipeStore"; 
+import { supabase } from "@/integrations/supabase/client";
 
 const RecipeDetail = () => {
   const { id } = useParams();
   const nav = useNavigate();
-  const recipe = id ? getRecipeById(id) : undefined;
-  const [servings, setServings] = useState(recipe?.servings ?? 2);
+
+  const [recipe, setRecipe] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [servings, setServings] = useState(2);
+
+  useEffect(() => {
+    if (!id) return;
+    const fetchRecipe = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("recipes")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching recipe:", error);
+      } else if (data) {
+        setRecipe(data);
+        setServings(data.servings || 2);
+      }
+      setLoading(false);
+    };
+
+    fetchRecipe();
+  }, [id]);
 
   const nutrition = useMemo(
     () =>
@@ -23,6 +44,14 @@ const RecipeDetail = () => {
         : { calories: 0, protein: 0, carbs: 0, fat: 0 },
     [recipe, servings]
   );
+
+  if (loading) {
+    return (
+      <main className="container mx-auto py-8">
+        <div className="text-center">Loading recipe...</div>
+      </main>
+    );
+  }
 
   if (!recipe) {
     return (
@@ -35,11 +64,7 @@ const RecipeDetail = () => {
     );
   }
 
-  const scaled = scaleIngredients(
-    recipe.ingredients,
-    recipe.servings,
-    servings
-  );
+  const scaled = scaleIngredients(recipe.ingredients, recipe.servings, servings);
 
   return (
     <main className="container mx-auto py-8">
@@ -58,9 +83,9 @@ const RecipeDetail = () => {
             image: recipe.image ? [recipe.image] : undefined,
             recipeYield: `${servings} servings`,
             recipeIngredient: scaled.map(
-              (i) => `${i.quantity} ${i.unit} ${i.name}`
+              (i: any) => `${i.quantity} ${i.unit} ${i.name}`
             ),
-            recipeInstructions: recipe.steps.map((s) => ({
+            recipeInstructions: recipe.steps.map((s: string) => ({
               "@type": "HowToStep",
               text: s,
             })),
@@ -72,7 +97,10 @@ const RecipeDetail = () => {
         <div className="lg:col-span-2">
           <div className="aspect-video w-full overflow-hidden rounded-md bg-muted">
             {recipe.image && (
-              <img  width="600" height="400" loading="lazy"
+              <img
+                width="600"
+                height="400"
+                loading="lazy"
                 src={recipe.image}
                 alt={`${recipe.title} photo`}
                 className="h-full w-full object-cover"
@@ -86,7 +114,7 @@ const RecipeDetail = () => {
           <section className="mt-6 space-y-2">
             <h2 className="text-xl font-semibold">Steps</h2>
             <ol className="list-decimal pl-6 space-y-2">
-              {recipe.steps.map((s, i) => (
+              {recipe.steps.map((s: string, i: number) => (
                 <li key={i}>{s}</li>
               ))}
             </ol>
@@ -114,8 +142,8 @@ const RecipeDetail = () => {
               <div className="space-y-2">
                 <h3 className="font-semibold">Ingredients</h3>
                 <ul className="space-y-1 text-sm">
-                  {scaled.map((i) => (
-                    <li key={i.id} className="flex justify-between">
+                  {scaled.map((i: any) => (
+                    <li key={i.id || i.name} className="flex justify-between">
                       <span>{i.name}</span>
                       <span className="text-muted-foreground">
                         {i.quantity} {i.unit}
@@ -138,7 +166,7 @@ const RecipeDetail = () => {
                 <Button variant="hero" onClick={() => nav("/planner")}>
                   Plan this recipe
                 </Button>
- <ShareButton />
+                <ShareButton />
               </div>
             </CardContent>
           </Card>
