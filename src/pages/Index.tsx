@@ -44,7 +44,7 @@ const Index = () => {
               </Link>
             </Button>
           ) : (
-            <Button variant="ghost" size="sm" onClick={() => signOut()} className="none">
+            <Button variant="ghost" size="sm" onClick={() => signOut()} className="hidden">
               <LogOut className="h-4 w-4" />
               Log out
             </Button>
