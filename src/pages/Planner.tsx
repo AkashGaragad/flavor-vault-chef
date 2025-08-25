@@ -109,36 +109,42 @@ const Planner = () => {
               {constants.DAYS.map((day) => {
                 const entry = planner[day][meal];
                 const recipe = recipes.find((r) => r.id === entry?.recipeId);
-                return (
-                  <Card key={`${day}-${meal}`}>
-                    <CardContent
-                      className="p-3 h-24 flex flex-col gap-2 justify-between"
-                      onDragOver={(e) => e.preventDefault()}
-                      onDrop={(e) => onDrop(day, meal, e)}
-                    >
-                      {recipe ? (
-                        <>
-                          <div className="text-sm font-medium line-clamp-2">
-                            {recipe.title}
-                          </div>
-                          <div className="flex justify-between items-center text-xs text-muted-foreground">
-                            <span>{entry?.servings} servings</span>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => onClear(day, meal)}
-                            >
-                              Clear
-                            </Button>
-                          </div>
-                        </>
-                      ) : (
-                        <div className="h-full w-full text-sm text-muted-foreground flex items-center justify-center">
-                          Drop recipe here
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
+                return (<Card key={`${day}-${meal}`} className="w-full sm:w-72">
+  <CardContent
+    className="p-3 min-h-24 flex flex-col gap-2 justify-between rounded-2xl shadow-sm
+               hover:shadow-md transition-all duration-200
+               sm:min-h-28 md:min-h-32"
+    onDragOver={(e) => e.preventDefault()}
+    onDrop={(e) => onDrop(day, meal, e)}
+  >
+    {recipe ? (
+      <>
+        {/* Recipe Title */}
+        <div className="text-sm sm:text-base font-medium line-clamp-2">
+          {recipe.title}
+        </div>
+
+        {/* Servings + Clear Button */}
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+          <span>{entry?.servings} servings</span>
+          <Button
+            size="sm"
+            variant="outline"
+            className="w-full sm:w-auto"
+            onClick={() => onClear(day, meal)}
+          >
+            Clear
+          </Button>
+        </div>
+      </>
+    ) : (
+      <div className="h-full w-full text-sm text-muted-foreground flex items-center justify-center text-center">
+        Drop recipe here
+      </div>
+    )}
+  </CardContent>
+</Card>
+
                 );
               })}
             </div>
