@@ -3,7 +3,8 @@ import hero from "@/assets/hero-food.jpg";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { ChefHat, CalendarDays, ShoppingCart } from "lucide-react";
+import { ChefHat, CalendarDays, ShoppingCart, LogIn, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 const navItems = [
   { to: "/", label: "Home" },
   { to: "/recipes", label: "Recipes" },
@@ -11,6 +12,7 @@ const navItems = [
   { to: "/grocery", label: "Grocery" },
 ];
 const Index = () => {
+   const { user, signOut } = useAuth();
   return (
     <main>
       <Helmet>
@@ -33,9 +35,21 @@ const Index = () => {
               <Button asChild variant="secondary" size="xl">
                 <Link to="/planner">Plan My Week</Link>
               </Button>
-              <Button asChild variant="outline" size="xl">
-                <Link to="/auth">Log in</Link>
-              </Button>
+               
+          {!user ? (
+            <Button asChild variant="secondary" size="sm">
+              <Link to="/auth" className="flex items-center gap-2">
+                <LogIn className="h-4 w-4" />
+                Log in
+              </Link>
+            </Button>
+          ) : (
+            <Button variant="ghost" size="sm" onClick={() => signOut()} className="none">
+              <LogOut className="h-4 w-4" />
+              Log out
+            </Button>
+          )}
+   
             </div>
           </div>
           <div className="rounded-xl border shadow-elegant overflow-hidden">
