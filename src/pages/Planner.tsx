@@ -109,7 +109,7 @@ const Planner = () => {
               {constants.DAYS.map((day) => {
                 const entry = planner[day][meal];
                 const recipe = recipes.find((r) => r.id === entry?.recipeId);
-                return (<Card key={`${day}-${meal}`} className="w-full sm:w-72">
+                return (<Card key={`${day}-${meal}`} className="w-full sm:w-50">
   <CardContent
     className="p-3 min-h-24 flex flex-col gap-2 justify-between rounded-2xl shadow-sm
                hover:shadow-md transition-all duration-200
@@ -138,7 +138,7 @@ const Planner = () => {
         </div>
       </>
     ) : (
-      <div className="h-full gap-2 w-full text-sm text-muted-foreground flex items-center justify-center text-center">
+      <div className="h-full w-full text-sm text-muted-foreground flex items-center justify-center text-center">
         Drop recipe here
       </div>
     )}
