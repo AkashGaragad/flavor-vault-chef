@@ -128,7 +128,7 @@ const RecipeDetail = () => {
                 <div className="text-sm text-muted-foreground">Servings</div>
                 <div className="flex items-center gap-2">
                   <input
-                    type="number"
+                    type="text"
                     min={1}
                     className="w-24 h-10 rounded-md border border-input bg-background px-3 text-sm"
                     value={servings}
