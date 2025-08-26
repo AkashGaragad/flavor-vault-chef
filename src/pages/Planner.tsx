@@ -138,7 +138,7 @@ const Planner = () => {
         </div>
       </>
     ) : (
-      <div className="h-full w-full text-sm text-muted-foreground flex items-center justify-center text-center">
+      <div className="h-full gap-2 w-full text-sm text-muted-foreground flex items-center justify-center text-center">
         Drop recipe here
       </div>
     )}
