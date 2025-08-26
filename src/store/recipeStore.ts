@@ -52,39 +52,40 @@ export function savePlanner(planner: Planner) {
 /* ----------------- INGREDIENT SCALING ----------------- */
 
 export function scaleIngredients(
-  ingredients: Ingredient[],
+  ingredients: any[],
   baseServings: number,
   targetServings: number
 ) {
+  if (!ingredients || ingredients.length === 0) return [];
   const factor = targetServings / baseServings;
+
   return ingredients.map((i) => ({
     ...i,
-    quantity: Number((i.quantity * factor).toFixed(2)),
+    quantity: (i.quantity ?? 1) * factor,
   }));
 }
 
-/* ----------------- NUTRITION ----------------- */
-
-
+// Compute nutrition totals for scaled ingredients
 export function computeNutrition(
-  ingredients: Ingredient[],
+  ingredients: any[],
   baseServings: number,
   targetServings: number
 ) {
+  if (!ingredients || ingredients.length === 0) {
+    return { calories: 0, protein: 0, carbs: 0, fat: 0 };
+  }
+
   const scaled = scaleIngredients(ingredients, baseServings, targetServings);
+
   return scaled.reduce(
     (acc, i) => {
-      const cal = i.calories ?? 0;
-      const protein = i.protein ?? 0;
-      const carbs = i.carbs ?? 0;
-      const fat = i.fat ?? 0;
+      const qty = i.quantity ?? 1;
+
       return {
-        calories:
-          acc.calories +
-          (cal * (i.unit === "g" || i.unit === "ml" ? i.quantity : 1)),
-        protein: acc.protein + protein * (i.unit === "g" ? i.quantity / 100 : 1),
-        carbs: acc.carbs + carbs * (i.unit === "g" ? i.quantity / 100 : 1),
-        fat: acc.fat + fat * (i.unit === "g" ? i.quantity / 100 : 1),
+        calories: acc.calories + (i.calories ?? 0) * qty,
+        protein: acc.protein + (i.protein ?? 0) * qty,
+        carbs: acc.carbs + (i.carbs ?? 0) * qty,
+        fat: acc.fat + (i.fat ?? 0) * qty,
       };
     },
     { calories: 0, protein: 0, carbs: 0, fat: 0 }

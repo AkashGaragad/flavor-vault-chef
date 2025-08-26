@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ShareButton } from "@/components/ShareButton";
-import { computeNutrition, scaleIngredients } from "@/store/recipeStore"; 
+import { computeNutrition, scaleIngredients } from "@/store/recipeStore";
 import { supabase } from "@/integrations/supabase/client";
 
 const RecipeDetail = () => {
@@ -128,7 +128,7 @@ const RecipeDetail = () => {
                 <div className="text-sm text-muted-foreground">Servings</div>
                 <div className="flex items-center gap-2">
                   <input
-                    type="text"
+                    type="number"
                     min={1}
                     className="w-24 h-10 rounded-md border border-input bg-background px-3 text-sm"
                     value={servings}
@@ -139,7 +139,7 @@ const RecipeDetail = () => {
                 </div>
               </div>
 
-                  <div className="space-y-2">
+              <div className="space-y-2">
                 <h3 className="font-semibold">Ingredients</h3>
                 <ul className="space-y-1 text-sm">
                   {scaled.map((i: any) => (
@@ -162,7 +162,8 @@ const RecipeDetail = () => {
                   <li>Fat: {nutrition.fat.toFixed(1)} g</li>
                 </ul>
               </div>
-                            <div className="flex gap-3">
+
+              <div className="flex gap-3">
                 <Button variant="hero" onClick={() => nav("/planner")}>
                   Plan this recipe
                 </Button>
