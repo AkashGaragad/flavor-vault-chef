@@ -139,7 +139,7 @@ const RecipeDetail = () => {
                 </div>
               </div>
 
-              <div className="space-y-2">
+                  <div className="space-y-2">
                 <h3 className="font-semibold">Ingredients</h3>
                 <ul className="space-y-1 text-sm">
                   {scaled.map((i: any) => (
@@ -162,7 +162,7 @@ const RecipeDetail = () => {
                   <li>Fat: {nutrition.fat.toFixed(1)} g</li>
                 </ul>
               </div>
-              <div className="flex gap-3">
+                            <div className="flex gap-3">
                 <Button variant="hero" onClick={() => nav("/planner")}>
                   Plan this recipe
                 </Button>

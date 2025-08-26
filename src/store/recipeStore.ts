@@ -65,6 +65,7 @@ export function scaleIngredients(
 
 /* ----------------- NUTRITION ----------------- */
 
+
 export function computeNutrition(
   ingredients: Ingredient[],
   baseServings: number,
@@ -89,7 +90,6 @@ export function computeNutrition(
     { calories: 0, protein: 0, carbs: 0, fat: 0 }
   );
 }
-
 /* ----------------- GROCERY LIST ----------------- */
 
 export type GroceryItem = { name: string; total: number; unit: string };
