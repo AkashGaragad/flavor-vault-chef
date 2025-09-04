@@ -39,47 +39,8 @@ const CalAI = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <section className="relative py-20 px-4 text-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-hero opacity-10" />
-        
-        <div className="relative max-w-4xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-hero bg-clip-text text-transparent">
-              Hill Calories AI
-            </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-8">
-              Instant nutrition analysis from your meal photos. Get accurate macronutrient data in seconds.
-            </p>
-          </div>
-
-          {!showUpload && !nutritionData && (
-            <>
-              <div className="mb-12">
-                <img 
-                  src={heroImage} 
-                  alt="Healthy meal for nutrition analysis" 
-                  className="w-full max-w-2xl mx-auto rounded-xl shadow-card"
-                />
-              </div>
-              
-              <Button 
-                variant="hero" 
-                size="lg"
-                onClick={() => setShowUpload(true)}
-                className="text-lg px-8 py-6 h-auto"
-              >
-                <Camera className="h-6 w-6" />
-                Analyze Your Meal
-              </Button>
-            </>
-          )}
-        </div>
-      </section>
-
-      {/* Features */}
-      {!showUpload && !nutritionData && (
+    <div className=" bg-background">
+         {!showUpload && !nutritionData && (
         <section className="py-16 px-4">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl font-bold text-center mb-12">
@@ -115,6 +76,47 @@ const CalAI = () => {
         </section>
       )}
 
+     
+      <section className="relative  px-4 text-center overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-hero opacity-10" />
+        
+        <div className="relative max-w-4xl mx-auto">
+          <div className="mb-8">
+           
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-8">
+              Instant nutrition analysis from your meal photos. Get accurate macronutrient data in seconds.
+            </p>
+          </div>
+
+          {!showUpload && !nutritionData && (
+            <>
+              <div className="mb-12">
+                <img 
+                  src={heroImage} 
+                   width="600"
+              height="400"
+              loading="lazy"
+                  alt="Healthy meal for nutrition analysis" 
+                  className="w-full max-w-2xl mx-auto rounded-xl shadow-card"
+                />
+              </div>
+              
+              <Button 
+                variant="hero" 
+                size="lg"
+                onClick={() => setShowUpload(true)}
+                className="text-lg px-8 py-5 h-auto m-8"
+              >
+                <Camera className="h-6 w-6" />
+                Analyze Your Meal
+              </Button>
+            </>
+          )}
+        </div>
+      </section>
+
+
+     
       {/* Upload Section */}
       {showUpload && !nutritionData && (
         <section className="py-12 px-4">
@@ -157,10 +159,7 @@ const CalAI = () => {
         </section>
       )}
 
-      {/* Footer */}
-      <footer className="py-8 px-4 text-center text-muted-foreground border-t">
-        <p>&copy; 2024 Hill Calories AI. Powered by advanced nutrition analysis.</p>
-      </footer>
+
     </div>
   );
 };
