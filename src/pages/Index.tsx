@@ -10,6 +10,7 @@ const navItems = [
   { to: "/recipes", label: "Recipes" },
   { to: "/planner", label: "Planner" },
   { to: "/grocery", label: "Grocery" },
+  { to: "/CalAI", label: "Grocery" },
 ];
 const Index = () => {
    const { user, signOut } = useAuth();

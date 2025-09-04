@@ -8,6 +8,7 @@ const navItems = [
   { to: "/recipes", label: "Recipes" },
   { to: "/planner", label: "Planner" },
   { to: "/grocery", label: "Grocery" },
+
 ];
 
 export const Header = () => {
@@ -47,6 +48,12 @@ export const Header = () => {
             <Link to="/planner" className="flex items-center gap-2">
               <CalendarDays className="h-4 w-4" />
               Plan Week
+            </Link>
+          </Button>
+          <Button asChild variant="secondary" size="sm" className="mr-4">
+            <Link to="/CalAI" className="flex items-center gap-2">
+            
+              Check Calaries
             </Link>
           </Button>
           <Button asChild variant="hero" size="sm">
