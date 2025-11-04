@@ -1,73 +1,94 @@
-# Welcome to your Lovable project
+# 🍳 My Recipes — Your Personal Recipe HQ
 
-## Project info
+**My Recipes** is a personal recipe management and meal planning web application designed to simplify your cooking routine.  
+Save your favorite recipes, plan weekly meals, and automatically generate a grocery list.  
+Cook confidently with integrated calorie tracking and nutrition insights.
 
-**URL**: https://lovable.dev/projects/fdfde752-556f-4ce5-bfe3-301577694ea9
+---
 
-## How can I edit this code?
+## 🚀 Features
 
-There are several ways of editing your application.
+### 🥗 Recipe Management
+- Add, view, and curate personalized recipes with images, ingredients, steps, and tags.  
+- Categorize recipes by meal type, cuisine, or difficulty.
 
-**Use Lovable**
+### 📅 Weekly Meal Planner
+- Plan your weekly meals using a drag-and-drop interface.  
+- Scale portion sizes and adjust serving counts easily.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/fdfde752-556f-4ce5-bfe3-301577694ea9) and start prompting.
+### 🧮 Calorie & Nutrition Tracker
+- Check the calorie and nutritional breakdown of each recipe.  
+- Make informed dietary choices with real-time nutrition summaries.
 
-Changes made via Lovable will be committed automatically to this repo.
+### 🛒 Grocery List Automation
+- Automatically generate a consolidated grocery list from your planned meals.  
+- Simplify shopping with organized ingredient lists.
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 🖥️ Tech Stack
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+| Category | Technology |
+|-----------|-------------|
+| **Frontend** | React.js, Tailwind CSS |
+| **Backend** | Node.js, Express.js |
+| **Database** | Supabase AI |
+| **Authentication** |supabase Auth |
+| **Deployment** | Netlify |
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 📸 UI Overview
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Homepage
+- Intro section with recipe image and two main actions:  
+  **Add a Recipe** and **Plan My Week**
 
-# Step 3: Install the necessary dependencies.
-npm i
+### Core Functional Cards
+- **Check Food Calories** — Analyze nutrition facts with photos  
+- **Curate Recipes** — Manage recipes with full details  
+- **Plan Your Week** — Schedule meals with drag-and-drop  
+- **Shop Efficiently** — Generate grocery lists automatically  
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+---
 
-**Edit a file directly in GitHub**
+## ⚙️ Installation & Setup
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### 1. Clone the repository
+```bash
+git clone https://github.com/AkashGaragad/flavor-vault-chef.git
 
-**Use GitHub Codespaces**
+##🧠 Future Enhancements
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+🥘 Recipe sharing and community feed
 
-## What technologies are used for this project?
+📱 Mobile-friendly PWA version
 
-This project is built with:
+📊 Advanced nutrition insights
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+💬 AI-based meal recommendations
 
-## How can I deploy this project?
+📅 Calendar sync (Google Calendar integration)
 
-Simply open [Lovable](https://lovable.dev/projects/fdfde752-556f-4ce5-bfe3-301577694ea9) and click on Share -> Publish.
+🤝 Contributing
 
-## Can I connect a custom domain to my Lovable project?
+*Contributions* are welcome!
+If you’d like to improve features, fix bugs, or enhance UI:
 
-Yes, you can!
+Fork the repo
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Create a feature branch (git checkout -b feature-name)
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Commit your changes
+
+Submit a pull request
+
+##🛡️ License
+
+This project is licensed under the MIT License — feel free to use and modify for your own projects.
+
+##📬 Contact
+
+Developer: Akash
+Email: akashgaragad2005@gmail.com
+GitHub: github.com/AkashGaragad
