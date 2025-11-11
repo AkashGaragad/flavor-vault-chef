@@ -21,36 +21,39 @@ export const Header = () => {
           <div className="h-9 w-9 rounded-md flex items-center justify-center bg-gradient-to-br from-primary to-accent text-primary-foreground shadow-elegant">
             <ChefHat className="h-5 w-5" />
           </div>
-          <span className="font-semibold">My Recipes</span>
+          <span className="font-bold text-xl ">My Recipes</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
           {navItems.map((item) => (
             <NavLink
-              key={item.to}
-              to={item.to}
-              className={({ isActive }) =>
-                cn(
-                  "text-sm transition-colors",
-                  isActive || location.pathname === item.to
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                )
-              }
-            >
-              {item.label}
-            </NavLink>
+  key={item.to}
+  to={item.to}
+  className={({ isActive }) =>
+    cn(
+      "relative text-sm font-medium transition-all duration-300 ease-in-out",
+      isActive || location.pathname === item.to
+        ? "text-foreground after:w-full"
+        : "text-muted-foreground hover:text-foreground after:w-0 hover:after:w-full",
+      
+      "after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:bg-foreground after:transition-all after:duration-300"
+    )
+  }
+>
+  {item.label}
+</NavLink>
+
           ))}
         </nav>
 
-        <div className="flex items-center gap-2  hidden sm:block">
-          <Button asChild variant="secondary" size="sm" className="mr-4">
+        <div className="flex item-center gap-2  hidden sm:block">
+          <Button asChild variant="outline" size="sm" className="mr-4">
             <Link to="/planner" className="flex items-center gap-2">
               <CalendarDays className="h-4 w-4" />
               Plan Week
             </Link>
           </Button>
-          <Button asChild variant="secondary" size="sm" className="mr-4">
+          <Button asChild variant="outline" size="sm" className="mr-4">
             <Link to="/CalAI" className="flex items-center gap-2">
             
               Check Calaries
@@ -68,7 +71,7 @@ export const Header = () => {
             <Button asChild variant="outline" size="sm">
               <Link to="/auth" className="flex items-center gap-2">
                 <LogIn className="h-4 w-4" />
-                Log in
+                Log in 
               </Link>
             </Button>
           ) : (
